@@ -1,10 +1,15 @@
 const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
 const startCallButton = document.getElementById('startCall');
+const endCallButton = document.getElementById('endCall');
 const users_ids = document.getElementById('users');
-
 const socket = io();
-const peerConnection = new RTCPeerConnection();
+
+let  peerConnection = new RTCPeerConnection({
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' }
+  ]
+});
 
 let localStream;
 let remoteId;
@@ -44,10 +49,10 @@ socket.on('user:joined', (id) => {
 });
 
 socket.on('users', (users) => {
-  USERS.you = users[1]
-  USERS.user = users[0]
+  USERS.you = users[0]
+  USERS.user = users[1]
 
-  users_ids.innerHTML = JSON.stringify(USERS)
+  // users_ids.innerHTML = JSON.stringify(USERS)
   // your_id.innerHTML = users[0]
   // user_id.innerHTML = users[1]
   console.log(USERS)
@@ -79,6 +84,18 @@ socket.on('candidate', async (data) => {
   }
 });
 
+socket.on('callEnded', async() => {
+  if (peerConnection) {
+    peerConnection.close()
+    peerConnection = null;
+  }
+  if (localStream) {
+    localStream.getTracks().forEach(track => track.stop());
+  }
+  location.reload();
+  // alert('The call has been ended by the other user.');
+});
+
 // Start Call Button Click
 startCallButton.addEventListener('click', async () => {
   remoteId = USERS.user;
@@ -86,4 +103,24 @@ startCallButton.addEventListener('click', async () => {
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
   socket.emit('offer', { sdp: offer, target: remoteId });
+});
+
+// End Call Button Click
+endCallButton.addEventListener('click', () => {
+  // Close the Peer Connection
+  if (peerConnection) {
+    peerConnection.close();
+    peerConnection = null;
+  }
+
+  // Stop Local Media Tracks
+  if (localStream) {
+    localStream.getTracks().forEach(track => track.stop());
+  }
+
+  // Notify the Remote Peer
+  socket.emit('endCall', { target: remoteId });
+
+  // Reset UI or States as Needed
+  location.reload();
 });

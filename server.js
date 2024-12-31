@@ -32,6 +32,7 @@ io.on('connection', (socket) => {
     connectedUsers[socket.id] = socket.id;
     // Send the list of connected users to the new user
     socket.emit('users', Object.values(connectedUsers));
+    console.log('new', socket.id)
 
     // Listen for offer from client
     socket.on('offer', (data) => {
@@ -47,6 +48,10 @@ io.on('connection', (socket) => {
     socket.on('candidate', (data) => {
         socket.to(data.target).emit('candidate', { candidate: data.candidate, sender: socket.id });
     });
+
+    socket.on('endCall', ({ target }) => {
+        socket.to(target).emit('callEnded');
+      });
 
     // Listen for disconnect
     socket.on('disconnect', () => {

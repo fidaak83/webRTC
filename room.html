@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Video Meeting</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+</head>
+<style>
+  #localVideo, #remoteVideo {
+    transform: scaleX(-1);
+}
+</style>
+
+<body class="bg-gray-800">
+  <!-- <h1>WebRTC Video Meeting</h1> -->
+  <pre id="users" class="text-yellow-500"></pre>
+
+  <div class="relative w-full max-w-sm h-full max-h-[80vh] bg-black rounded-lg overflow-hidden">
+    <!-- Main Video -->
+    <video autoplay id="remoteVideo" class="w-full h-full object-cover">
+
+    </video>
+
+    <!-- PIP (Picture-in-Picture) Video -->
+    <div class="absolute top-4 right-4 w-28 h-28 bg-black border-2 border-white rounded-lg overflow-hidden shadow-lg">
+      <video autoplay muted id="localVideo" class="w-full h-full object-cover">
+
+      </video>
+    </div>
+
+    </div>
+  <!-- <div class="flex-1 bg-green-500 rounded-full overlay-none">
+    <video id="localVideo" autoplay muted class="scale-x-[-1]"></video>
+
+  </div>
+  <video id="remoteVideo" autoplay class="scale-x-[-1] rounded-full"></video> -->
+  <div id="controls">
+    <button id="startCall" type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200">Call</button>
+  </div>
+
+  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+  <script src="./script.js"></script>
+
+</body>
+
+</html>
