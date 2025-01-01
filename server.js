@@ -71,7 +71,10 @@ app.get('/', (req, res) => {
     // res.render('room');
 });
 
+// Use environment variable for port, or fallback to 3000 if not set
+const PORT = process.env.PORT || 3000;
+
 // Start the server
-server.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
+server.listen(PORT, () => {
+    console.log(`Server running on PORT: ${PORT}`);
 });
