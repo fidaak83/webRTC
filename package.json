@@ -5,6 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
+    "build": "npm install",  
     "start": "nodemon server.js"
   },
   "keywords": [],
