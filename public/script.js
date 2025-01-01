@@ -49,8 +49,8 @@ socket.on('user:joined', (id) => {
 });
 
 socket.on('users', (users) => {
-  USERS.you = users[0]
-  USERS.user = users[1]
+  USERS.you = users[1]
+  USERS.user = users[0]
 
   // users_ids.innerHTML = JSON.stringify(USERS)
   // your_id.innerHTML = users[0]
