@@ -31,6 +31,8 @@ io.on('connection', (socket) => {
     // Add user to the connected users list
     connectedUsers[socket.id] = socket.id;
     // Send the list of connected users to the new user
+    // Broadcast the list of users to all other clients (except the sender)
+  socket.broadcast.emit('users', Object.values(connectedUsers));
     socket.emit('users', Object.values(connectedUsers));
     console.log('new', socket.id)
 
