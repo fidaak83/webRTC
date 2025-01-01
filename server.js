@@ -3,6 +3,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Socket } from 'dgram';
 // Initialize Express app
 const app = express();
 // Serve static files from the "public" directory
@@ -23,18 +24,11 @@ const io = new Server(server, {
     }
 });
 
-// Set to keep track of connected users
-let connectedUsers = [];
-
 // WebSocket signaling events
 io.on('connection', (socket) => {
-    // Add user to the connected users list
-    connectedUsers[socket.id] = socket.id;
-    // Send the list of connected users to the new user
-    // Broadcast the list of users to all other clients (except the sender)
-  socket.broadcast.emit('users', Object.values(connectedUsers));
-    socket.emit('users', Object.values(connectedUsers));
-    console.log('new', socket.id)
+
+    socket.broadcast.emit('user:joined', socket.id);
+    socket.emit('your:id', socket.id);
 
     // Listen for offer from client
     socket.on('offer', (data) => {
@@ -53,13 +47,11 @@ io.on('connection', (socket) => {
 
     socket.on('endCall', ({ target }) => {
         socket.to(target).emit('callEnded');
-      });
+    });
 
     // Listen for disconnect
     socket.on('disconnect', () => {
-        // console.log(`User disconnected: ${socket.id}`);
-        delete connectedUsers[socket.id];
-        socket.emit('user:disconnect', Object.values(connectedUsers));
+        socket.emit('user:disconnect');
     });
 });
 
